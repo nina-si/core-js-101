@@ -41,9 +41,7 @@ const getComposition = (f, g) => (x) => f(g(x));
  *
  */
 function getPowerFunction(exponent) {
-  return function (num) {
-    return num ** exponent;
-  };
+  return (num) => num ** exponent;
 }
 
 /**
@@ -59,7 +57,7 @@ function getPowerFunction(exponent) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-const getPolynom = (...args) => function (x) {
+const getPolynom = (...args) => (x) => {
   if (args.length === 1) return args[0];
   if (args.length === 2) return args[0] * x + args[1];
   if (args.length === 3) return args[0] * x ** 2 + args[1] * x + args[2];
@@ -82,7 +80,7 @@ const getPolynom = (...args) => function (x) {
  */
 function memoize(func) {
   let cach;
-  return function () {
+  return () => {
     if (!cach) {
       cach = func();
     }
@@ -108,14 +106,14 @@ function memoize(func) {
 
 function retry(func, attempts) {
   return () => {
-    for (let i = 0; i < attempts; i += 1) {
-      try {
-        return func();
-      } catch (e) {
-        console.log(e);
+    try {
+      return func();
+    } catch (err) {
+      if (attempts > 0) {
+        return retry(func, attempts - 1)();
       }
+      throw Error(err);
     }
-    throw Error(`${attempts} attempts`);
   };
 }
 /**
@@ -143,7 +141,6 @@ function retry(func, attempts) {
  */
 function logger(func, logFunc) {
   return (...args) => {
-    console.log(args);
     logFunc(`${func.name}(${args.map((i) => JSON.stringify(i))}) starts`);
     const res = func(...args);
     logFunc(`${func.name}(${args.map((i) => JSON.stringify(i))}) ends`);
@@ -164,9 +161,7 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(/* fn, ...args1 */) {
-  throw new Error('Not implemented');
-}
+const partialUsingArguments = (fn, ...args1) => (...args2) => fn(...args1, ...args2);
 
 /**
  * Returns the id generator function that returns next integer starting
