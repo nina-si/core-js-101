@@ -435,8 +435,31 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  for (let i = 0; i < position.length; i += 1) {
+    const column = [];
+    for (let j = 0; j < position[i].length; j += 1) {
+      column.push(position[j][i]);
+    }
+
+    if ((position[i].length === 3 && position[i].every((item) => item === 'X'))
+      || (column.length === 3 && column.every((item) => item === 'X'))) return 'X';
+    if ((position[i].length === 3 && position[i].every((item) => item === '0'))
+      || (column.length === 3 && column.every((item) => item === '0'))) return '0';
+  }
+  const firstDiagonal = [];
+  for (let k = 0; k < position.length; k += 1) {
+    firstDiagonal.push(position[k][k]);
+  }
+  if (firstDiagonal.length === 3 && firstDiagonal.every((item) => item === 'X')) return 'X';
+  if (firstDiagonal.length === 3 && firstDiagonal.every((item) => item === '0')) return '0';
+  const secondDiagonal = [];
+  secondDiagonal.push(position[2][0]);
+  secondDiagonal.push(position[1][1]);
+  secondDiagonal.push(position[0][2]);
+  if (secondDiagonal.length === 3 && secondDiagonal.every((item) => item === 'X')) return 'X';
+  if (secondDiagonal.length === 3 && secondDiagonal.every((item) => item === '0')) return '0';
+  return undefined;
 }
 
 module.exports = {
